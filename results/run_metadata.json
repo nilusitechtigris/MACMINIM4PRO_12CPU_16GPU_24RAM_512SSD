@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-11-13T00:34:45+01:00",
+  "machine": {
+    "model_identifier": "Mac16,11",
+    "chip": "Apple M4 Pro",
+    "cpu_cores_total": 12,
+    "cpu_performance_cores": 8,
+    "cpu_efficiency_cores": 4,
+    "gpu_cores": 16,
+    "memory_bytes": 25769803776,
+    "macos": "27.2.1 (26B131)",
+    "ollama_version": "0.40.16",
+    "ollama_server_env": {
+      "OLLAMA_FLASH_ATTENTION": "1",
+      "OLLAMA_KV_CACHE_TYPE": "q8_0"
+    }
+  },
+  "prompt": "Explain how a computer CPU works, step by step.",
+  "system_prompt": "You are a helpful assistant.",
+  "warmup_prompt": "The quick brown fox jumps over the lazy dog while the sun sets slowly behind the quiet green hills of the old village.",
+  "options": {
+    "temperature": 0,
+    "seed": 42,
+    "num_predict": 512,
+    "num_ctx": 4096,
+    "draft_num_predict": 0
+  },
+  "rounds": 3,
+  "cooldown_s": 5.0,
+  "models": [
+    "gemma3:1b",
+    "lfm3:1.7b-q4_K_M",
+    "qwen3.5:2b-q4_K_M",
+    "llama3.2:3b",
+    "granite4.1:3b",
+    "ministral-3:3b",
+    "phi4-mini:3.8b",
+    "qwen3.5:4b-q4_K_M",
+    "nemotron-3-nano:4b-q4_K_M",
+    "gemma4:e4b-it-q4_K_M",
+    "olmo-3:7b",
+    "llama3.1:8b",
+    "deepseek-r1:8b",
+    "granite4.1:8b",
+    "qwen3.5:9b-q4_K_M",
+    "gemma4:12b-it-q4_K_M",
+    "ministral-3:14b",
+    "qwen3:14b",
+    "gpt-oss:20b",
+    "mistral-small3.2:24b"
+  ],
+  "finished_at": "2026-11-13T00:57:50+01:00"
+}

@@ -1,0 +1,4167 @@
+{
+  "title": "Local LLM benchmark - Mac mini M4 Pro (12-core CPU, 16-core GPU, 24 GB, 512 GB SSD)",
+  "started_at": "2026-11-13T00:34:45+01:00",
+  "finished_at": "2026-11-13T00:57:50+01:00",
+  "machine": {
+    "model_identifier": "Mac16,11",
+    "chip": "Apple M4 Pro",
+    "cpu_cores_total": 12,
+    "cpu_performance_cores": 8,
+    "cpu_efficiency_cores": 4,
+    "gpu_cores": 16,
+    "memory_bytes": 25769803776,
+    "macos": "27.2.1 (26B131)",
+    "ollama_version": "0.40.16",
+    "ollama_server_env": {
+      "OLLAMA_FLASH_ATTENTION": "1",
+      "OLLAMA_KV_CACHE_TYPE": "q8_0"
+    }
+  },
+  "methodology": {
+    "framework": "Ollama 0.40.16 (llama.cpp engine for every model)",
+    "prompt": "Explain how a computer CPU works, step by step.",
+    "system_prompt": "You are a helpful assistant.",
+    "prompt_api": "/api/chat, one system + one user message, streaming",
+    "options": {
+      "temperature": 0,
+      "seed": 42,
+      "num_predict": 512,
+      "num_ctx": 4096,
+      "draft_num_predict": 0
+    },
+    "rounds": 3,
+    "order": "round-robin: all models in round 1, then all in round 2, then all in round 3",
+    "per_test_procedure": [
+      "unload everything and wait until no Ollama runner process exists",
+      "cool-down 5.0 s",
+      "LOAD the model (POST /api/generate without prompt, same num_ctx) - timed",
+      "warm-up: one raw prompt of similar length, 8 tokens (initialises GPU kernels; not measured)",
+      "TEST: the benchmark prompt via streaming /api/chat - measured",
+      "unload the model"
+    ],
+    "metrics": {
+      "ttft_ms": "client-side time from sending the request to receiving the first generated token (answer or reasoning token)",
+      "decode_tokens_per_s": "eval_count / eval_duration reported by Ollama (pure generation speed)",
+      "prefill_tokens_per_s": "prompt_eval_count / prompt_eval_duration reported by Ollama",
+      "end_to_end_tokens_per_s": "generated tokens / total client wall time of the request",
+      "load_time_s": "wall time of the load request (reading weights from SSD / OS file cache into GPU memory)",
+      "runner_peak_rss_gib": "peak resident memory of the Ollama inference process (llama-server), sampled every 100 ms during load + test; includes the memory-mapped weights",
+      "runner_peak_phys_footprint_gib": "peak macOS phys_footprint of the inference process (private memory: KV cache, compute buffers, heap - excludes the mmapped weights)",
+      "ollama_reported_gib": "model memory reported by Ollama's /api/ps - reference only, under-reported by Ollama 0.40 for models with a vision projector",
+      "system_used_peak_gib": "peak 'Memory Used' of the whole Mac (app + wired + compressed) during load + test"
+    },
+    "warmup_prompt": "The quick brown fox jumps over the lazy dog while the sun sets slowly behind the quiet green hills of the old village."
+  },
+  "rankings": {
+    "fastest_decode_tokens_per_s": [
+      {
+        "rank": 1,
+        "model": "gemma3:1b",
+        "value": 138.66
+      },
+      {
+        "rank": 2,
+        "model": "lfm3:1.7b-q4_K_M",
+        "value": 130.89
+      },
+      {
+        "rank": 3,
+        "model": "qwen3.5:2b-q4_K_M",
+        "value": 94.31
+      },
+      {
+        "rank": 4,
+        "model": "llama3.2:3b",
+        "value": 89.43
+      },
+      {
+        "rank": 5,
+        "model": "granite4.1:3b",
+        "value": 78.12
+      },
+      {
+        "rank": 6,
+        "model": "ministral-3:3b",
+        "value": 70.43
+      },
+      {
+        "rank": 7,
+        "model": "phi4-mini:3.8b",
+        "value": 69.32
+      },
+      {
+        "rank": 8,
+        "model": "qwen3.5:4b-q4_K_M",
+        "value": 55.0
+      },
+      {
+        "rank": 9,
+        "model": "gpt-oss:20b",
+        "value": 52.47
+      },
+      {
+        "rank": 10,
+        "model": "gemma4:e4b-it-q4_K_M",
+        "value": 48.8
+      },
+      {
+        "rank": 11,
+        "model": "nemotron-3-nano:4b-q4_K_M",
+        "value": 47.3
+      },
+      {
+        "rank": 12,
+        "model": "olmo-3:7b",
+        "value": 46.14
+      },
+      {
+        "rank": 13,
+        "model": "llama3.1:8b",
+        "value": 43.24
+      },
+      {
+        "rank": 14,
+        "model": "deepseek-r1:8b",
+        "value": 39.84
+      },
+      {
+        "rank": 15,
+        "model": "granite4.1:8b",
+        "value": 36.54
+      },
+      {
+        "rank": 16,
+        "model": "qwen3.5:9b-q4_K_M",
+        "value": 34.22
+      },
+      {
+        "rank": 17,
+        "model": "gemma4:12b-it-q4_K_M",
+        "value": 26.03
+      },
+      {
+        "rank": 18,
+        "model": "ministral-3:14b",
+        "value": 25.89
+      },
+      {
+        "rank": 19,
+        "model": "qwen3:14b",
+        "value": 24.18
+      },
+      {
+        "rank": 20,
+        "model": "mistral-small3.2:24b",
+        "value": 16.08
+      }
+    ],
+    "lowest_ttft_ms": [
+      {
+        "rank": 1,
+        "model": "gemma3:1b",
+        "value": 40.2
+      },
+      {
+        "rank": 2,
+        "model": "lfm3:1.7b-q4_K_M",
+        "value": 43.4
+      },
+      {
+        "rank": 3,
+        "model": "ministral-3:3b",
+        "value": 55.9
+      },
+      {
+        "rank": 4,
+        "model": "qwen3.5:2b-q4_K_M",
+        "value": 58.3
+      },
+      {
+        "rank": 5,
+        "model": "phi4-mini:3.8b",
+        "value": 61.1
+      },
+      {
+        "rank": 6,
+        "model": "granite4.1:3b",
+        "value": 65.8
+      },
+      {
+        "rank": 7,
+        "model": "llama3.2:3b",
+        "value": 85.7
+      },
+      {
+        "rank": 8,
+        "model": "llama3.1:8b",
+        "value": 108.7
+      },
+      {
+        "rank": 9,
+        "model": "qwen3.5:4b-q4_K_M",
+        "value": 114.8
+      },
+      {
+        "rank": 10,
+        "model": "granite4.1:8b",
+        "value": 130.9
+      },
+      {
+        "rank": 11,
+        "model": "nemotron-3-nano:4b-q4_K_M",
+        "value": 142.9
+      },
+      {
+        "rank": 12,
+        "model": "gemma4:e4b-it-q4_K_M",
+        "value": 156.3
+      },
+      {
+        "rank": 13,
+        "model": "qwen3.5:9b-q4_K_M",
+        "value": 165.2
+      },
+      {
+        "rank": 14,
+        "model": "ministral-3:14b",
+        "value": 175.2
+      },
+      {
+        "rank": 15,
+        "model": "deepseek-r1:8b",
+        "value": 177.9
+      },
+      {
+        "rank": 16,
+        "model": "olmo-3:7b",
+        "value": 219.1
+      },
+      {
+        "rank": 17,
+        "model": "gpt-oss:20b",
+        "value": 296.4
+      },
+      {
+        "rank": 18,
+        "model": "mistral-small3.2:24b",
+        "value": 305.7
+      },
+      {
+        "rank": 19,
+        "model": "gemma4:12b-it-q4_K_M",
+        "value": 357.2
+      },
+      {
+        "rank": 20,
+        "model": "qwen3:14b",
+        "value": 434.1
+      }
+    ],
+    "lowest_peak_rss_gib": [
+      {
+        "rank": 1,
+        "model": "gemma3:1b",
+        "value": 0.901
+      },
+      {
+        "rank": 2,
+        "model": "lfm3:1.7b-q4_K_M",
+        "value": 1.193
+      },
+      {
+        "rank": 3,
+        "model": "qwen3.5:2b-q4_K_M",
+        "value": 2.101
+      },
+      {
+        "rank": 4,
+        "model": "granite4.1:3b",
+        "value": 2.217
+      },
+      {
+        "rank": 5,
+        "model": "llama3.2:3b",
+        "value": 2.233
+      },
+      {
+        "rank": 6,
+        "model": "phi4-mini:3.8b",
+        "value": 2.697
+      },
+      {
+        "rank": 7,
+        "model": "nemotron-3-nano:4b-q4_K_M",
+        "value": 3.097
+      },
+      {
+        "rank": 8,
+        "model": "ministral-3:3b",
+        "value": 3.155
+      },
+      {
+        "rank": 9,
+        "model": "qwen3.5:4b-q4_K_M",
+        "value": 3.567
+      },
+      {
+        "rank": 10,
+        "model": "llama3.1:8b",
+        "value": 4.934
+      },
+      {
+        "rank": 11,
+        "model": "deepseek-r1:8b",
+        "value": 5.246
+      },
+      {
+        "rank": 12,
+        "model": "olmo-3:7b",
+        "value": 5.328
+      },
+      {
+        "rank": 13,
+        "model": "granite4.1:8b",
+        "value": 5.382
+      },
+      {
+        "rank": 14,
+        "model": "gemma4:e4b-it-q4_K_M",
+        "value": 6.317
+      },
+      {
+        "rank": 15,
+        "model": "qwen3.5:9b-q4_K_M",
+        "value": 6.555
+      },
+      {
+        "rank": 16,
+        "model": "gemma4:12b-it-q4_K_M",
+        "value": 7.705
+      },
+      {
+        "rank": 17,
+        "model": "qwen3:14b",
+        "value": 8.977
+      },
+      {
+        "rank": 18,
+        "model": "ministral-3:14b",
+        "value": 9.004
+      },
+      {
+        "rank": 19,
+        "model": "gpt-oss:20b",
+        "value": 12.892
+      },
+      {
+        "rank": 20,
+        "model": "mistral-small3.2:24b",
+        "value": 14.612
+      }
+    ],
+    "fastest_load_time_s": [
+      {
+        "rank": 1,
+        "model": "lfm3:1.7b-q4_K_M",
+        "value": 0.723
+      },
+      {
+        "rank": 2,
+        "model": "gemma3:1b",
+        "value": 0.891
+      },
+      {
+        "rank": 3,
+        "model": "granite4.1:3b",
+        "value": 1.562
+      },
+      {
+        "rank": 4,
+        "model": "qwen3.5:2b-q4_K_M",
+        "value": 1.572
+      },
+      {
+        "rank": 5,
+        "model": "llama3.2:3b",
+        "value": 1.573
+      },
+      {
+        "rank": 6,
+        "model": "nemotron-3-nano:4b-q4_K_M",
+        "value": 1.82
+      },
+      {
+        "rank": 7,
+        "model": "phi4-mini:3.8b",
+        "value": 1.992
+      },
+      {
+        "rank": 8,
+        "model": "qwen3.5:4b-q4_K_M",
+        "value": 2.673
+      },
+      {
+        "rank": 9,
+        "model": "ministral-3:3b",
+        "value": 2.751
+      },
+      {
+        "rank": 10,
+        "model": "llama3.1:8b",
+        "value": 4.268
+      },
+      {
+        "rank": 11,
+        "model": "olmo-3:7b",
+        "value": 5.184
+      },
+      {
+        "rank": 12,
+        "model": "granite4.1:8b",
+        "value": 5.78
+      },
+      {
+        "rank": 13,
+        "model": "deepseek-r1:8b",
+        "value": 5.786
+      },
+      {
+        "rank": 14,
+        "model": "qwen3.5:9b-q4_K_M",
+        "value": 6.043
+      },
+      {
+        "rank": 15,
+        "model": "gemma4:e4b-it-q4_K_M",
+        "value": 6.943
+      },
+      {
+        "rank": 16,
+        "model": "qwen3:14b",
+        "value": 7.388
+      },
+      {
+        "rank": 17,
+        "model": "gemma4:12b-it-q4_K_M",
+        "value": 8.291
+      },
+      {
+        "rank": 18,
+        "model": "ministral-3:14b",
+        "value": 9.244
+      },
+      {
+        "rank": 19,
+        "model": "gpt-oss:20b",
+        "value": 12.122
+      },
+      {
+        "rank": 20,
+        "model": "mistral-small3.2:24b",
+        "value": 19.207
+      }
+    ]
+  },
+  "models": [
+    {
+      "model": "gemma3:1b",
+      "vendor": "Google",
+      "family": "gemma3",
+      "parameters": "999.89M",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-2f8c3d137f24 --port 60255 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 0.75,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 138.66,
+          "median": 136.83,
+          "min": 136.56,
+          "max": 142.58,
+          "stdev": 3.4,
+          "cv_percent": 2.5,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 40.2,
+          "median": 41.5,
+          "min": 35.6,
+          "max": 43.5,
+          "stdev": 4.1,
+          "cv_percent": 10.2,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 841.1,
+          "median": 800.64,
+          "min": 771.39,
+          "max": 951.27,
+          "stdev": 96.52,
+          "cv_percent": 11.5,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 137.17,
+          "median": 135.25,
+          "min": 135.07,
+          "max": 141.19,
+          "stdev": 3.48,
+          "cv_percent": 2.5,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 0.891,
+          "median": 0.806,
+          "min": 0.806,
+          "max": 1.06,
+          "stdev": 0.147,
+          "cv_percent": 16.5,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 0.901,
+          "median": 0.9,
+          "min": 0.9,
+          "max": 0.902,
+          "stdev": 0.001,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.19,
+          "median": 0.19,
+          "min": 0.189,
+          "max": 0.191,
+          "stdev": 0.001,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 0.815,
+          "median": 0.815,
+          "min": 0.815,
+          "max": 0.815,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 6.768,
+          "median": 6.667,
+          "min": 6.135,
+          "max": 7.503,
+          "stdev": 0.69,
+          "cv_percent": 10.2,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 153.9,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:34:45+01:00",
+          "load_time_s": 1.06,
+          "ttft_ms": 35.6,
+          "decode_tokens_per_s": 142.58,
+          "prefill_tokens_per_s": 951.27,
+          "end_to_end_tokens_per_s": 141.19,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 3.626,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.815,
+            "ollama_reported_vram_gib": 0.815,
+            "runner_rss_after_load_gib": 0.893,
+            "runner_peak_rss_gib": 0.9,
+            "runner_peak_phys_footprint_gib": 0.189,
+            "system_used_before_load_gib": 5.129,
+            "system_used_peak_gib": 6.135,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:42:23+01:00",
+          "load_time_s": 0.806,
+          "ttft_ms": 41.5,
+          "decode_tokens_per_s": 136.56,
+          "prefill_tokens_per_s": 800.64,
+          "end_to_end_tokens_per_s": 135.07,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 3.791,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.815,
+            "ollama_reported_vram_gib": 0.815,
+            "runner_rss_after_load_gib": 0.895,
+            "runner_peak_rss_gib": 0.902,
+            "runner_peak_phys_footprint_gib": 0.191,
+            "system_used_before_load_gib": 5.744,
+            "system_used_peak_gib": 7.503,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:50:07+01:00",
+          "load_time_s": 0.806,
+          "ttft_ms": 43.5,
+          "decode_tokens_per_s": 136.83,
+          "prefill_tokens_per_s": 771.39,
+          "end_to_end_tokens_per_s": 135.25,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 3.785,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.815,
+            "ollama_reported_vram_gib": 0.815,
+            "runner_rss_after_load_gib": 0.893,
+            "runner_peak_rss_gib": 0.9,
+            "runner_peak_phys_footprint_gib": 0.19,
+            "system_used_before_load_gib": 5.671,
+            "system_used_peak_gib": 6.667,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "lfm3:1.7b-q4_K_M",
+      "vendor": "Liquid AI",
+      "family": "lfm3",
+      "parameters": "1.7B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-3793e1e6e226 --port 60278 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 1.02,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 130.89,
+          "median": 132.34,
+          "min": 123.27,
+          "max": 137.05,
+          "stdev": 7.0,
+          "cv_percent": 5.4,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 43.4,
+          "median": 43.9,
+          "min": 41.7,
+          "max": 44.7,
+          "stdev": 1.6,
+          "cv_percent": 3.6,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 785.88,
+          "median": 775.57,
+          "min": 773.21,
+          "max": 808.86,
+          "stdev": 19.94,
+          "cv_percent": 2.5,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 129.45,
+          "median": 130.86,
+          "min": 121.96,
+          "max": 135.54,
+          "stdev": 6.9,
+          "cv_percent": 5.3,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 0.723,
+          "median": 0.807,
+          "min": 0.554,
+          "max": 0.807,
+          "stdev": 0.146,
+          "cv_percent": 20.2,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 1.193,
+          "median": 1.189,
+          "min": 1.188,
+          "max": 1.203,
+          "stdev": 0.008,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.19,
+          "median": 0.191,
+          "min": 0.189,
+          "max": 0.191,
+          "stdev": 0.001,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 1.089,
+          "median": 1.089,
+          "min": 1.089,
+          "max": 1.089,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 6.915,
+          "median": 6.985,
+          "min": 6.58,
+          "max": 7.179,
+          "stdev": 0.306,
+          "cv_percent": 4.4,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 109.72,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:34:55+01:00",
+          "load_time_s": 0.554,
+          "ttft_ms": 44.7,
+          "decode_tokens_per_s": 123.27,
+          "prefill_tokens_per_s": 773.21,
+          "end_to_end_tokens_per_s": 121.96,
+          "generated_tokens": 512,
+          "prompt_tokens": 32,
+          "total_wall_s": 4.198,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.089,
+            "ollama_reported_vram_gib": 1.089,
+            "runner_rss_after_load_gib": 1.197,
+            "runner_peak_rss_gib": 1.203,
+            "runner_peak_phys_footprint_gib": 0.189,
+            "system_used_before_load_gib": 5.27,
+            "system_used_peak_gib": 6.58,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:42:33+01:00",
+          "load_time_s": 0.807,
+          "ttft_ms": 41.7,
+          "decode_tokens_per_s": 137.05,
+          "prefill_tokens_per_s": 808.86,
+          "end_to_end_tokens_per_s": 135.54,
+          "generated_tokens": 512,
+          "prompt_tokens": 32,
+          "total_wall_s": 3.778,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.089,
+            "ollama_reported_vram_gib": 1.089,
+            "runner_rss_after_load_gib": 1.18,
+            "runner_peak_rss_gib": 1.188,
+            "runner_peak_phys_footprint_gib": 0.191,
+            "system_used_before_load_gib": 5.871,
+            "system_used_peak_gib": 7.179,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:50:17+01:00",
+          "load_time_s": 0.807,
+          "ttft_ms": 43.9,
+          "decode_tokens_per_s": 132.34,
+          "prefill_tokens_per_s": 775.57,
+          "end_to_end_tokens_per_s": 130.86,
+          "generated_tokens": 512,
+          "prompt_tokens": 32,
+          "total_wall_s": 3.913,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.089,
+            "ollama_reported_vram_gib": 1.089,
+            "runner_rss_after_load_gib": 1.181,
+            "runner_peak_rss_gib": 1.189,
+            "runner_peak_phys_footprint_gib": 0.191,
+            "system_used_before_load_gib": 5.677,
+            "system_used_peak_gib": 6.985,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "qwen3.5:2b-q4_K_M",
+      "vendor": "Alibaba (Qwen)",
+      "family": "qwen35",
+      "parameters": "1.9B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-20cb277f0967 --port 60299 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-5ddf560e3404 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 1.81,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 94.31,
+          "median": 97.54,
+          "min": 85.62,
+          "max": 99.78,
+          "stdev": 7.61,
+          "cv_percent": 8.1,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 58.3,
+          "median": 55.6,
+          "min": 55.4,
+          "max": 63.8,
+          "stdev": 4.8,
+          "cv_percent": 8.2,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 602.9,
+          "median": 632.03,
+          "min": 544.45,
+          "max": 632.21,
+          "stdev": 50.62,
+          "cv_percent": 8.4,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 93.31,
+          "median": 96.52,
+          "min": 84.84,
+          "max": 98.56,
+          "stdev": 7.4,
+          "cv_percent": 7.9,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 1.572,
+          "median": 1.572,
+          "min": 1.568,
+          "max": 1.577,
+          "stdev": 0.005,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 2.101,
+          "median": 2.102,
+          "min": 2.099,
+          "max": 2.102,
+          "stdev": 0.002,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.945,
+          "median": 0.945,
+          "min": 0.945,
+          "max": 0.945,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 1.499,
+          "median": 1.499,
+          "min": 1.499,
+          "max": 1.499,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 7.961,
+          "median": 8.107,
+          "min": 7.574,
+          "max": 8.201,
+          "stdev": 0.338,
+          "cv_percent": 4.2,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 44.89,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:35:06+01:00",
+          "load_time_s": 1.568,
+          "ttft_ms": 55.6,
+          "decode_tokens_per_s": 85.62,
+          "prefill_tokens_per_s": 632.21,
+          "end_to_end_tokens_per_s": 84.84,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 6.035,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.499,
+            "ollama_reported_vram_gib": 1.499,
+            "runner_rss_after_load_gib": 2.077,
+            "runner_peak_rss_gib": 2.102,
+            "runner_peak_phys_footprint_gib": 0.945,
+            "system_used_before_load_gib": 5.144,
+            "system_used_peak_gib": 7.574,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:42:44+01:00",
+          "load_time_s": 1.577,
+          "ttft_ms": 55.4,
+          "decode_tokens_per_s": 97.54,
+          "prefill_tokens_per_s": 632.03,
+          "end_to_end_tokens_per_s": 96.52,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 5.305,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.499,
+            "ollama_reported_vram_gib": 1.499,
+            "runner_rss_after_load_gib": 2.078,
+            "runner_peak_rss_gib": 2.102,
+            "runner_peak_phys_footprint_gib": 0.945,
+            "system_used_before_load_gib": 5.771,
+            "system_used_peak_gib": 8.201,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:50:28+01:00",
+          "load_time_s": 1.572,
+          "ttft_ms": 63.8,
+          "decode_tokens_per_s": 99.78,
+          "prefill_tokens_per_s": 544.45,
+          "end_to_end_tokens_per_s": 98.56,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 5.195,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 1.499,
+            "ollama_reported_vram_gib": 1.499,
+            "runner_rss_after_load_gib": 2.074,
+            "runner_peak_rss_gib": 2.099,
+            "runner_peak_phys_footprint_gib": 0.945,
+            "system_used_before_load_gib": 5.677,
+            "system_used_peak_gib": 8.107,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "llama3.2:3b",
+      "vendor": "Meta",
+      "family": "llama",
+      "parameters": "3.2B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-dde5aa3fc5ff --port 60324 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 1.88,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 89.43,
+          "median": 89.09,
+          "min": 88.99,
+          "max": 90.21,
+          "stdev": 0.68,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 85.7,
+          "median": 85.3,
+          "min": 85.2,
+          "max": 86.6,
+          "stdev": 0.8,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 524.36,
+          "median": 525.54,
+          "min": 520.4,
+          "max": 527.14,
+          "stdev": 3.52,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 88.11,
+          "median": 87.79,
+          "min": 87.69,
+          "max": 88.86,
+          "stdev": 0.65,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 1.573,
+          "median": 1.574,
+          "min": 1.568,
+          "max": 1.577,
+          "stdev": 0.005,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 2.233,
+          "median": 2.233,
+          "min": 2.233,
+          "max": 2.233,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.388,
+          "median": 0.389,
+          "min": 0.387,
+          "max": 0.389,
+          "stdev": 0.001,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 2.182,
+          "median": 2.182,
+          "min": 2.182,
+          "max": 2.182,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 7.914,
+          "median": 8.043,
+          "min": 7.529,
+          "max": 8.17,
+          "stdev": 0.339,
+          "cv_percent": 4.3,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 40.05,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:35:19+01:00",
+          "load_time_s": 1.568,
+          "ttft_ms": 86.6,
+          "decode_tokens_per_s": 90.21,
+          "prefill_tokens_per_s": 520.4,
+          "end_to_end_tokens_per_s": 88.86,
+          "generated_tokens": 512,
+          "prompt_tokens": 43,
+          "total_wall_s": 5.762,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.182,
+            "ollama_reported_vram_gib": 2.182,
+            "runner_rss_after_load_gib": 2.227,
+            "runner_peak_rss_gib": 2.233,
+            "runner_peak_phys_footprint_gib": 0.389,
+            "system_used_before_load_gib": 5.139,
+            "system_used_peak_gib": 7.529,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:42:56+01:00",
+          "load_time_s": 1.577,
+          "ttft_ms": 85.2,
+          "decode_tokens_per_s": 88.99,
+          "prefill_tokens_per_s": 527.14,
+          "end_to_end_tokens_per_s": 87.69,
+          "generated_tokens": 512,
+          "prompt_tokens": 43,
+          "total_wall_s": 5.839,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.182,
+            "ollama_reported_vram_gib": 2.182,
+            "runner_rss_after_load_gib": 2.228,
+            "runner_peak_rss_gib": 2.233,
+            "runner_peak_phys_footprint_gib": 0.387,
+            "system_used_before_load_gib": 5.77,
+            "system_used_peak_gib": 8.17,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:50:40+01:00",
+          "load_time_s": 1.574,
+          "ttft_ms": 85.3,
+          "decode_tokens_per_s": 89.09,
+          "prefill_tokens_per_s": 525.54,
+          "end_to_end_tokens_per_s": 87.79,
+          "generated_tokens": 512,
+          "prompt_tokens": 43,
+          "total_wall_s": 5.832,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.182,
+            "ollama_reported_vram_gib": 2.182,
+            "runner_rss_after_load_gib": 2.227,
+            "runner_peak_rss_gib": 2.233,
+            "runner_peak_phys_footprint_gib": 0.389,
+            "system_used_before_load_gib": 5.68,
+            "system_used_peak_gib": 8.043,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "granite4.1:3b",
+      "vendor": "IBM",
+      "family": "granite",
+      "parameters": "3.4B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-662b0626cd58 --port 60350 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 1.96,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 78.12,
+          "median": 77.83,
+          "min": 77.76,
+          "max": 78.76,
+          "stdev": 0.56,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 65.8,
+          "median": 65.7,
+          "min": 65.4,
+          "max": 66.2,
+          "stdev": 0.4,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 497.28,
+          "median": 498.41,
+          "min": 494.61,
+          "max": 498.83,
+          "stdev": 2.32,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 77.15,
+          "median": 76.87,
+          "min": 76.81,
+          "max": 77.77,
+          "stdev": 0.54,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 1.562,
+          "median": 1.562,
+          "min": 1.56,
+          "max": 1.564,
+          "stdev": 0.002,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 2.217,
+          "median": 2.217,
+          "min": 2.216,
+          "max": 2.218,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.319,
+          "median": 0.319,
+          "min": 0.318,
+          "max": 0.32,
+          "stdev": 0.001,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 2.19,
+          "median": 2.19,
+          "min": 2.19,
+          "max": 2.19,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 7.936,
+          "median": 8.149,
+          "min": 7.506,
+          "max": 8.153,
+          "stdev": 0.372,
+          "cv_percent": 4.7,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 410,
+          "median": 410,
+          "min": 410,
+          "max": 410,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 35.24,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:35:32+01:00",
+          "load_time_s": 1.564,
+          "ttft_ms": 66.2,
+          "decode_tokens_per_s": 78.76,
+          "prefill_tokens_per_s": 494.61,
+          "end_to_end_tokens_per_s": 77.77,
+          "generated_tokens": 410,
+          "prompt_tokens": 31,
+          "total_wall_s": 5.272,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.19,
+            "ollama_reported_vram_gib": 2.19,
+            "runner_rss_after_load_gib": 2.212,
+            "runner_peak_rss_gib": 2.217,
+            "runner_peak_phys_footprint_gib": 0.319,
+            "system_used_before_load_gib": 5.138,
+            "system_used_peak_gib": 7.506,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:43:09+01:00",
+          "load_time_s": 1.562,
+          "ttft_ms": 65.7,
+          "decode_tokens_per_s": 77.83,
+          "prefill_tokens_per_s": 498.41,
+          "end_to_end_tokens_per_s": 76.87,
+          "generated_tokens": 410,
+          "prompt_tokens": 31,
+          "total_wall_s": 5.333,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.19,
+            "ollama_reported_vram_gib": 2.19,
+            "runner_rss_after_load_gib": 2.21,
+            "runner_peak_rss_gib": 2.216,
+            "runner_peak_phys_footprint_gib": 0.318,
+            "system_used_before_load_gib": 5.798,
+            "system_used_peak_gib": 8.149,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:50:53+01:00",
+          "load_time_s": 1.56,
+          "ttft_ms": 65.4,
+          "decode_tokens_per_s": 77.76,
+          "prefill_tokens_per_s": 498.83,
+          "end_to_end_tokens_per_s": 76.81,
+          "generated_tokens": 410,
+          "prompt_tokens": 31,
+          "total_wall_s": 5.338,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.19,
+            "ollama_reported_vram_gib": 2.19,
+            "runner_rss_after_load_gib": 2.213,
+            "runner_peak_rss_gib": 2.218,
+            "runner_peak_phys_footprint_gib": 0.32,
+            "system_used_before_load_gib": 5.674,
+            "system_used_peak_gib": 8.153,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "ministral-3:3b",
+      "vendor": "Mistral AI",
+      "family": "mistral3",
+      "parameters": "3.8B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-910e4bf4e233 --port 60375 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-910e4bf4e233 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 2.75,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 70.43,
+          "median": 69.08,
+          "min": 67.73,
+          "max": 74.48,
+          "stdev": 3.57,
+          "cv_percent": 5.1,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 55.9,
+          "median": 55.8,
+          "min": 55.3,
+          "max": 56.7,
+          "stdev": 0.7,
+          "cv_percent": 1.3,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 457.61,
+          "median": 457.41,
+          "min": 452.08,
+          "max": 463.33,
+          "stdev": 5.63,
+          "cv_percent": 1.2,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 69.89,
+          "median": 68.56,
+          "min": 67.24,
+          "max": 73.88,
+          "stdev": 3.52,
+          "cv_percent": 5.0,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 2.751,
+          "median": 2.838,
+          "min": 2.576,
+          "max": 2.839,
+          "stdev": 0.152,
+          "cv_percent": 5.5,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 3.155,
+          "median": 3.155,
+          "min": 3.155,
+          "max": 3.156,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.163,
+          "median": 1.163,
+          "min": 1.163,
+          "max": 1.163,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 0.665,
+          "median": 0.665,
+          "min": 0.665,
+          "max": 0.665,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 9.074,
+          "median": 9.093,
+          "min": 9.003,
+          "max": 9.126,
+          "stdev": 0.064,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 22.32,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:35:44+01:00",
+          "load_time_s": 2.576,
+          "ttft_ms": 55.8,
+          "decode_tokens_per_s": 74.48,
+          "prefill_tokens_per_s": 457.41,
+          "end_to_end_tokens_per_s": 73.88,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 6.93,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.665,
+            "ollama_reported_vram_gib": 0.665,
+            "runner_rss_after_load_gib": 3.153,
+            "runner_peak_rss_gib": 3.156,
+            "runner_peak_phys_footprint_gib": 1.163,
+            "system_used_before_load_gib": 5.155,
+            "system_used_peak_gib": 9.093,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:43:22+01:00",
+          "load_time_s": 2.838,
+          "ttft_ms": 56.7,
+          "decode_tokens_per_s": 69.08,
+          "prefill_tokens_per_s": 452.08,
+          "end_to_end_tokens_per_s": 68.56,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 7.468,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.665,
+            "ollama_reported_vram_gib": 0.665,
+            "runner_rss_after_load_gib": 3.152,
+            "runner_peak_rss_gib": 3.155,
+            "runner_peak_phys_footprint_gib": 1.163,
+            "system_used_before_load_gib": 5.797,
+            "system_used_peak_gib": 9.126,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:51:06+01:00",
+          "load_time_s": 2.839,
+          "ttft_ms": 55.3,
+          "decode_tokens_per_s": 67.73,
+          "prefill_tokens_per_s": 463.33,
+          "end_to_end_tokens_per_s": 67.24,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 7.614,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 0.665,
+            "ollama_reported_vram_gib": 0.665,
+            "runner_rss_after_load_gib": 3.152,
+            "runner_peak_rss_gib": 3.155,
+            "runner_peak_phys_footprint_gib": 1.163,
+            "system_used_before_load_gib": 5.675,
+            "system_used_peak_gib": 9.003,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "phi4-mini:3.8b",
+      "vendor": "Microsoft",
+      "family": "phi3",
+      "parameters": "3.8B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-3c168af1dea0 --port 60404 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 2.32,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 69.32,
+          "median": 69.81,
+          "min": 68.12,
+          "max": 70.03,
+          "stdev": 1.05,
+          "cv_percent": 1.5,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 61.1,
+          "median": 61.0,
+          "min": 60.6,
+          "max": 61.8,
+          "stdev": 0.6,
+          "cv_percent": 1.0,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 368.22,
+          "median": 368.54,
+          "min": 366.13,
+          "max": 369.99,
+          "stdev": 1.95,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 68.69,
+          "median": 69.17,
+          "min": 67.51,
+          "max": 69.4,
+          "stdev": 1.03,
+          "cv_percent": 1.5,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 1.992,
+          "median": 2.08,
+          "min": 1.816,
+          "max": 2.08,
+          "stdev": 0.152,
+          "cv_percent": 7.7,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 2.697,
+          "median": 2.697,
+          "min": 2.697,
+          "max": 2.697,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.421,
+          "median": 0.42,
+          "min": 0.42,
+          "max": 0.422,
+          "stdev": 0.001,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 2.658,
+          "median": 2.658,
+          "min": 2.658,
+          "max": 2.658,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 8.911,
+          "median": 8.641,
+          "min": 8.509,
+          "max": 9.584,
+          "stdev": 0.586,
+          "cv_percent": 6.6,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 463,
+          "median": 463,
+          "min": 463,
+          "max": 463,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 25.7,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:36:00+01:00",
+          "load_time_s": 1.816,
+          "ttft_ms": 61.0,
+          "decode_tokens_per_s": 68.12,
+          "prefill_tokens_per_s": 366.13,
+          "end_to_end_tokens_per_s": 67.51,
+          "generated_tokens": 463,
+          "prompt_tokens": 21,
+          "total_wall_s": 6.858,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.658,
+            "ollama_reported_vram_gib": 2.658,
+            "runner_rss_after_load_gib": 2.691,
+            "runner_peak_rss_gib": 2.697,
+            "runner_peak_phys_footprint_gib": 0.42,
+            "system_used_before_load_gib": 5.767,
+            "system_used_peak_gib": 9.584,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:43:38+01:00",
+          "load_time_s": 2.08,
+          "ttft_ms": 61.8,
+          "decode_tokens_per_s": 69.81,
+          "prefill_tokens_per_s": 368.54,
+          "end_to_end_tokens_per_s": 69.17,
+          "generated_tokens": 463,
+          "prompt_tokens": 21,
+          "total_wall_s": 6.693,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.658,
+            "ollama_reported_vram_gib": 2.658,
+            "runner_rss_after_load_gib": 2.691,
+            "runner_peak_rss_gib": 2.697,
+            "runner_peak_phys_footprint_gib": 0.422,
+            "system_used_before_load_gib": 5.797,
+            "system_used_peak_gib": 8.641,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:51:22+01:00",
+          "load_time_s": 2.08,
+          "ttft_ms": 60.6,
+          "decode_tokens_per_s": 70.03,
+          "prefill_tokens_per_s": 369.99,
+          "end_to_end_tokens_per_s": 69.4,
+          "generated_tokens": 463,
+          "prompt_tokens": 21,
+          "total_wall_s": 6.672,
+          "done_reason": "stop",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 2.658,
+            "ollama_reported_vram_gib": 2.658,
+            "runner_rss_after_load_gib": 2.691,
+            "runner_peak_rss_gib": 2.697,
+            "runner_peak_phys_footprint_gib": 0.42,
+            "system_used_before_load_gib": 5.667,
+            "system_used_peak_gib": 8.509,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "qwen3.5:4b-q4_K_M",
+      "vendor": "Alibaba (Qwen)",
+      "family": "qwen35",
+      "parameters": "4.2B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-a9d0a3e1d8c9 --port 60430 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-e56a899b1540 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 3.1,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 55.0,
+          "median": 54.76,
+          "min": 54.76,
+          "max": 55.49,
+          "stdev": 0.42,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 114.8,
+          "median": 115.6,
+          "min": 111.6,
+          "max": 117.3,
+          "stdev": 2.9,
+          "cv_percent": 2.5,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 312.08,
+          "median": 309.47,
+          "min": 307.68,
+          "max": 319.08,
+          "stdev": 6.13,
+          "cv_percent": 2.0,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 54.33,
+          "median": 54.09,
+          "min": 54.08,
+          "max": 54.83,
+          "stdev": 0.43,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 2.673,
+          "median": 2.591,
+          "min": 2.586,
+          "max": 2.843,
+          "stdev": 0.147,
+          "cv_percent": 5.5,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 3.567,
+          "median": 3.567,
+          "min": 3.566,
+          "max": 3.567,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.151,
+          "median": 1.151,
+          "min": 1.151,
+          "max": 1.151,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 2.886,
+          "median": 2.886,
+          "min": 2.886,
+          "max": 2.886,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 9.835,
+          "median": 9.858,
+          "min": 9.628,
+          "max": 10.02,
+          "stdev": 0.197,
+          "cv_percent": 2.0,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 15.42,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:36:14+01:00",
+          "load_time_s": 2.586,
+          "ttft_ms": 111.6,
+          "decode_tokens_per_s": 55.49,
+          "prefill_tokens_per_s": 319.08,
+          "end_to_end_tokens_per_s": 54.83,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 9.338,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.886,
+            "ollama_reported_vram_gib": 2.886,
+            "runner_rss_after_load_gib": 3.414,
+            "runner_peak_rss_gib": 3.567,
+            "runner_peak_phys_footprint_gib": 1.151,
+            "system_used_before_load_gib": 6.089,
+            "system_used_peak_gib": 10.02,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:43:53+01:00",
+          "load_time_s": 2.591,
+          "ttft_ms": 115.6,
+          "decode_tokens_per_s": 54.76,
+          "prefill_tokens_per_s": 307.68,
+          "end_to_end_tokens_per_s": 54.09,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 9.466,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.886,
+            "ollama_reported_vram_gib": 2.886,
+            "runner_rss_after_load_gib": 3.413,
+            "runner_peak_rss_gib": 3.566,
+            "runner_peak_phys_footprint_gib": 1.151,
+            "system_used_before_load_gib": 5.798,
+            "system_used_peak_gib": 9.858,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:51:37+01:00",
+          "load_time_s": 2.843,
+          "ttft_ms": 117.3,
+          "decode_tokens_per_s": 54.76,
+          "prefill_tokens_per_s": 309.47,
+          "end_to_end_tokens_per_s": 54.08,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 9.467,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.886,
+            "ollama_reported_vram_gib": 2.886,
+            "runner_rss_after_load_gib": 3.414,
+            "runner_peak_rss_gib": 3.567,
+            "runner_peak_phys_footprint_gib": 1.151,
+            "system_used_before_load_gib": 5.667,
+            "system_used_peak_gib": 9.628,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "nemotron-3-nano:4b-q4_K_M",
+      "vendor": "NVIDIA",
+      "family": "nemotron_h",
+      "parameters": "4.0B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-527db2cf6c70 --port 60459 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 2.64,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 47.3,
+          "median": 47.23,
+          "min": 47.12,
+          "max": 47.55,
+          "stdev": 0.22,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 142.9,
+          "median": 145.4,
+          "min": 135.1,
+          "max": 148.2,
+          "stdev": 6.9,
+          "cv_percent": 4.8,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 266.17,
+          "median": 262.94,
+          "min": 259.18,
+          "max": 276.4,
+          "stdev": 9.05,
+          "cv_percent": 3.4,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 46.69,
+          "median": 46.65,
+          "min": 46.49,
+          "max": 46.92,
+          "stdev": 0.22,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 1.82,
+          "median": 1.821,
+          "min": 1.815,
+          "max": 1.824,
+          "stdev": 0.005,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 3.097,
+          "median": 3.097,
+          "min": 3.096,
+          "max": 3.098,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.503,
+          "median": 0.503,
+          "min": 0.503,
+          "max": 0.504,
+          "stdev": 0.001,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 2.583,
+          "median": 2.583,
+          "min": 2.583,
+          "max": 2.583,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 8.919,
+          "median": 8.864,
+          "min": 8.808,
+          "max": 9.084,
+          "stdev": 0.146,
+          "cv_percent": 1.6,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 15.27,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:36:32+01:00",
+          "load_time_s": 1.815,
+          "ttft_ms": 135.1,
+          "decode_tokens_per_s": 47.23,
+          "prefill_tokens_per_s": 276.4,
+          "end_to_end_tokens_per_s": 46.65,
+          "generated_tokens": 512,
+          "prompt_tokens": 34,
+          "total_wall_s": 10.975,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.583,
+            "ollama_reported_vram_gib": 2.583,
+            "runner_rss_after_load_gib": 2.853,
+            "runner_peak_rss_gib": 3.096,
+            "runner_peak_phys_footprint_gib": 0.504,
+            "system_used_before_load_gib": 6.052,
+            "system_used_peak_gib": 9.084,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:44:11+01:00",
+          "load_time_s": 1.824,
+          "ttft_ms": 145.4,
+          "decode_tokens_per_s": 47.55,
+          "prefill_tokens_per_s": 259.18,
+          "end_to_end_tokens_per_s": 46.92,
+          "generated_tokens": 512,
+          "prompt_tokens": 34,
+          "total_wall_s": 10.912,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.583,
+            "ollama_reported_vram_gib": 2.583,
+            "runner_rss_after_load_gib": 2.854,
+            "runner_peak_rss_gib": 3.097,
+            "runner_peak_phys_footprint_gib": 0.503,
+            "system_used_before_load_gib": 5.802,
+            "system_used_peak_gib": 8.808,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:51:55+01:00",
+          "load_time_s": 1.821,
+          "ttft_ms": 148.2,
+          "decode_tokens_per_s": 47.12,
+          "prefill_tokens_per_s": 262.94,
+          "end_to_end_tokens_per_s": 46.49,
+          "generated_tokens": 512,
+          "prompt_tokens": 34,
+          "total_wall_s": 11.014,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 2.583,
+            "ollama_reported_vram_gib": 2.583,
+            "runner_rss_after_load_gib": 2.854,
+            "runner_peak_rss_gib": 3.098,
+            "runner_peak_phys_footprint_gib": 0.503,
+            "system_used_before_load_gib": 5.797,
+            "system_used_peak_gib": 8.864,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "gemma4:e4b-it-q4_K_M",
+      "vendor": "Google",
+      "family": "gemma4",
+      "parameters": "7.5B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-370c2879f176 --port 60485 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-4cb21b935cd7 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 6.13,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 48.8,
+          "median": 48.81,
+          "min": 48.79,
+          "max": 48.81,
+          "stdev": 0.01,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 156.3,
+          "median": 156.3,
+          "min": 155.5,
+          "max": 157.2,
+          "stdev": 0.9,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 388.16,
+          "median": 387.35,
+          "min": 385.52,
+          "max": 391.6,
+          "stdev": 3.12,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 48.4,
+          "median": 48.4,
+          "min": 48.38,
+          "max": 48.41,
+          "stdev": 0.02,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 6.943,
+          "median": 6.931,
+          "min": 6.679,
+          "max": 7.219,
+          "stdev": 0.27,
+          "cv_percent": 3.9,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 6.317,
+          "median": 6.317,
+          "min": 6.317,
+          "max": 6.318,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.243,
+          "median": 1.243,
+          "min": 1.243,
+          "max": 1.243,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 0.268,
+          "median": 0.268,
+          "min": 0.268,
+          "max": 0.268,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 10.487,
+          "median": 10.451,
+          "min": 10.434,
+          "max": 10.577,
+          "stdev": 0.078,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 7.73,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:36:51+01:00",
+          "load_time_s": 6.679,
+          "ttft_ms": 155.5,
+          "decode_tokens_per_s": 48.81,
+          "prefill_tokens_per_s": 391.6,
+          "end_to_end_tokens_per_s": 48.41,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 10.577,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.268,
+            "ollama_reported_vram_gib": 0.268,
+            "runner_rss_after_load_gib": 6.307,
+            "runner_peak_rss_gib": 6.318,
+            "runner_peak_phys_footprint_gib": 1.243,
+            "system_used_before_load_gib": 6.05,
+            "system_used_peak_gib": 10.577,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:44:29+01:00",
+          "load_time_s": 7.219,
+          "ttft_ms": 156.3,
+          "decode_tokens_per_s": 48.79,
+          "prefill_tokens_per_s": 387.35,
+          "end_to_end_tokens_per_s": 48.38,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 10.582,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.268,
+            "ollama_reported_vram_gib": 0.268,
+            "runner_rss_after_load_gib": 6.306,
+            "runner_peak_rss_gib": 6.317,
+            "runner_peak_phys_footprint_gib": 1.243,
+            "system_used_before_load_gib": 5.811,
+            "system_used_peak_gib": 10.434,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:52:13+01:00",
+          "load_time_s": 6.931,
+          "ttft_ms": 157.2,
+          "decode_tokens_per_s": 48.81,
+          "prefill_tokens_per_s": 385.52,
+          "end_to_end_tokens_per_s": 48.4,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 10.579,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.268,
+            "ollama_reported_vram_gib": 0.268,
+            "runner_rss_after_load_gib": 6.307,
+            "runner_peak_rss_gib": 6.317,
+            "runner_peak_phys_footprint_gib": 1.243,
+            "system_used_before_load_gib": 5.774,
+            "system_used_peak_gib": 10.451,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "olmo-3:7b",
+      "vendor": "Allen Institute for AI (Ai2)",
+      "family": "olmo3",
+      "parameters": "7.3B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-3b6b58718a43 --port 60533 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 4.16,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 46.14,
+          "median": 46.05,
+          "min": 45.88,
+          "max": 46.49,
+          "stdev": 0.31,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 219.1,
+          "median": 219.4,
+          "min": 218.4,
+          "max": 219.4,
+          "stdev": 0.6,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 228.51,
+          "median": 228.42,
+          "min": 227.88,
+          "max": 229.24,
+          "stdev": 0.68,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 45.24,
+          "median": 45.16,
+          "min": 44.99,
+          "max": 45.58,
+          "stdev": 0.3,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 5.184,
+          "median": 5.113,
+          "min": 5.094,
+          "max": 5.344,
+          "stdev": 0.139,
+          "cv_percent": 2.7,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 5.328,
+          "median": 5.328,
+          "min": 5.327,
+          "max": 5.329,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.241,
+          "median": 1.241,
+          "min": 1.24,
+          "max": 1.242,
+          "stdev": 0.001,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 4.879,
+          "median": 4.879,
+          "min": 4.879,
+          "max": 4.879,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 11.173,
+          "median": 11.145,
+          "min": 11.072,
+          "max": 11.303,
+          "stdev": 0.118,
+          "cv_percent": 1.1,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 8.66,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:37:14+01:00",
+          "load_time_s": 5.094,
+          "ttft_ms": 219.4,
+          "decode_tokens_per_s": 45.88,
+          "prefill_tokens_per_s": 227.88,
+          "end_to_end_tokens_per_s": 44.99,
+          "generated_tokens": 512,
+          "prompt_tokens": 49,
+          "total_wall_s": 11.379,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.879,
+            "ollama_reported_vram_gib": 4.879,
+            "runner_rss_after_load_gib": 5.3,
+            "runner_peak_rss_gib": 5.329,
+            "runner_peak_phys_footprint_gib": 1.242,
+            "system_used_before_load_gib": 5.969,
+            "system_used_peak_gib": 11.303,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:44:53+01:00",
+          "load_time_s": 5.113,
+          "ttft_ms": 219.4,
+          "decode_tokens_per_s": 46.05,
+          "prefill_tokens_per_s": 228.42,
+          "end_to_end_tokens_per_s": 45.16,
+          "generated_tokens": 512,
+          "prompt_tokens": 49,
+          "total_wall_s": 11.337,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.879,
+            "ollama_reported_vram_gib": 4.879,
+            "runner_rss_after_load_gib": 5.297,
+            "runner_peak_rss_gib": 5.327,
+            "runner_peak_phys_footprint_gib": 1.24,
+            "system_used_before_load_gib": 5.813,
+            "system_used_peak_gib": 11.145,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:52:37+01:00",
+          "load_time_s": 5.344,
+          "ttft_ms": 218.4,
+          "decode_tokens_per_s": 46.49,
+          "prefill_tokens_per_s": 229.24,
+          "end_to_end_tokens_per_s": 45.58,
+          "generated_tokens": 512,
+          "prompt_tokens": 49,
+          "total_wall_s": 11.232,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.879,
+            "ollama_reported_vram_gib": 4.879,
+            "runner_rss_after_load_gib": 5.299,
+            "runner_peak_rss_gib": 5.328,
+            "runner_peak_phys_footprint_gib": 1.241,
+            "system_used_before_load_gib": 5.752,
+            "system_used_peak_gib": 11.072,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "llama3.1:8b",
+      "vendor": "Meta",
+      "family": "llama",
+      "parameters": "8.0B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-667b0c1932bc --port 60572 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 4.58,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 43.24,
+          "median": 43.47,
+          "min": 42.78,
+          "max": 43.48,
+          "stdev": 0.4,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 108.7,
+          "median": 108.6,
+          "min": 108.1,
+          "max": 109.3,
+          "stdev": 0.6,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 314.83,
+          "median": 315.9,
+          "min": 311.59,
+          "max": 316.99,
+          "stdev": 2.86,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 42.85,
+          "median": 43.07,
+          "min": 42.4,
+          "max": 43.08,
+          "stdev": 0.39,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 4.268,
+          "median": 4.35,
+          "min": 4.095,
+          "max": 4.359,
+          "stdev": 0.15,
+          "cv_percent": 3.5,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 4.934,
+          "median": 4.933,
+          "min": 4.933,
+          "max": 4.935,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.424,
+          "median": 0.423,
+          "min": 0.423,
+          "max": 0.425,
+          "stdev": 0.001,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 4.686,
+          "median": 4.686,
+          "min": 4.686,
+          "max": 4.686,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 10.695,
+          "median": 10.686,
+          "min": 10.579,
+          "max": 10.82,
+          "stdev": 0.121,
+          "cv_percent": 1.1,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 8.76,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:37:36+01:00",
+          "load_time_s": 4.095,
+          "ttft_ms": 109.3,
+          "decode_tokens_per_s": 42.78,
+          "prefill_tokens_per_s": 311.59,
+          "end_to_end_tokens_per_s": 42.4,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 12.076,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.686,
+            "ollama_reported_vram_gib": 4.686,
+            "runner_rss_after_load_gib": 4.928,
+            "runner_peak_rss_gib": 4.935,
+            "runner_peak_phys_footprint_gib": 0.425,
+            "system_used_before_load_gib": 5.967,
+            "system_used_peak_gib": 10.82,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:45:15+01:00",
+          "load_time_s": 4.359,
+          "ttft_ms": 108.6,
+          "decode_tokens_per_s": 43.48,
+          "prefill_tokens_per_s": 315.9,
+          "end_to_end_tokens_per_s": 43.08,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 11.884,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.686,
+            "ollama_reported_vram_gib": 4.686,
+            "runner_rss_after_load_gib": 4.928,
+            "runner_peak_rss_gib": 4.933,
+            "runner_peak_phys_footprint_gib": 0.423,
+            "system_used_before_load_gib": 5.812,
+            "system_used_peak_gib": 10.686,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:52:59+01:00",
+          "load_time_s": 4.35,
+          "ttft_ms": 108.1,
+          "decode_tokens_per_s": 43.47,
+          "prefill_tokens_per_s": 316.99,
+          "end_to_end_tokens_per_s": 43.07,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 11.887,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.686,
+            "ollama_reported_vram_gib": 4.686,
+            "runner_rss_after_load_gib": 4.927,
+            "runner_peak_rss_gib": 4.933,
+            "runner_peak_phys_footprint_gib": 0.423,
+            "system_used_before_load_gib": 5.696,
+            "system_used_peak_gib": 10.579,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "deepseek-r1:8b",
+      "vendor": "DeepSeek",
+      "family": "qwen3",
+      "parameters": "8.2B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-e6a7edc1a4d7 --port 60607 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 4.87,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 39.84,
+          "median": 40.05,
+          "min": 39.29,
+          "max": 40.17,
+          "stdev": 0.48,
+          "cv_percent": 1.2,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 177.9,
+          "median": 177.7,
+          "min": 176.7,
+          "max": 179.2,
+          "stdev": 1.3,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 197.09,
+          "median": 197.37,
+          "min": 196.33,
+          "max": 197.58,
+          "stdev": 0.67,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 39.49,
+          "median": 39.69,
+          "min": 38.96,
+          "max": 39.82,
+          "stdev": 0.46,
+          "cv_percent": 1.2,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 5.786,
+          "median": 5.862,
+          "min": 5.614,
+          "max": 5.882,
+          "stdev": 0.149,
+          "cv_percent": 2.6,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 5.246,
+          "median": 5.246,
+          "min": 5.245,
+          "max": 5.247,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.449,
+          "median": 0.449,
+          "min": 0.448,
+          "max": 0.449,
+          "stdev": 0.001,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 4.467,
+          "median": 4.467,
+          "min": 4.467,
+          "max": 4.467,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 11.011,
+          "median": 11.07,
+          "min": 10.837,
+          "max": 11.125,
+          "stdev": 0.153,
+          "cv_percent": 1.4,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 7.59,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:37:58+01:00",
+          "load_time_s": 5.614,
+          "ttft_ms": 177.7,
+          "decode_tokens_per_s": 40.17,
+          "prefill_tokens_per_s": 197.58,
+          "end_to_end_tokens_per_s": 39.82,
+          "generated_tokens": 512,
+          "prompt_tokens": 21,
+          "total_wall_s": 12.859,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.467,
+            "ollama_reported_vram_gib": 4.467,
+            "runner_rss_after_load_gib": 5.24,
+            "runner_peak_rss_gib": 5.245,
+            "runner_peak_phys_footprint_gib": 0.448,
+            "system_used_before_load_gib": 5.991,
+            "system_used_peak_gib": 11.125,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:45:37+01:00",
+          "load_time_s": 5.882,
+          "ttft_ms": 176.7,
+          "decode_tokens_per_s": 40.05,
+          "prefill_tokens_per_s": 196.33,
+          "end_to_end_tokens_per_s": 39.69,
+          "generated_tokens": 512,
+          "prompt_tokens": 21,
+          "total_wall_s": 12.9,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.467,
+            "ollama_reported_vram_gib": 4.467,
+            "runner_rss_after_load_gib": 5.242,
+            "runner_peak_rss_gib": 5.247,
+            "runner_peak_phys_footprint_gib": 0.449,
+            "system_used_before_load_gib": 5.844,
+            "system_used_peak_gib": 11.07,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:53:21+01:00",
+          "load_time_s": 5.862,
+          "ttft_ms": 179.2,
+          "decode_tokens_per_s": 39.29,
+          "prefill_tokens_per_s": 197.37,
+          "end_to_end_tokens_per_s": 38.96,
+          "generated_tokens": 512,
+          "prompt_tokens": 21,
+          "total_wall_s": 13.143,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.467,
+            "ollama_reported_vram_gib": 4.467,
+            "runner_rss_after_load_gib": 5.241,
+            "runner_peak_rss_gib": 5.246,
+            "runner_peak_phys_footprint_gib": 0.449,
+            "system_used_before_load_gib": 5.696,
+            "system_used_peak_gib": 10.837,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "granite4.1:8b",
+      "vendor": "IBM",
+      "family": "granite",
+      "parameters": "8.8B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-ed902ac9eb6a --port 60649 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 4.98,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 36.54,
+          "median": 36.22,
+          "min": 35.95,
+          "max": 37.45,
+          "stdev": 0.8,
+          "cv_percent": 2.2,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 130.9,
+          "median": 130.0,
+          "min": 130.0,
+          "max": 132.7,
+          "stdev": 1.6,
+          "cv_percent": 1.2,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 248.08,
+          "median": 248.23,
+          "min": 247.41,
+          "max": 248.6,
+          "stdev": 0.61,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 36.2,
+          "median": 35.88,
+          "min": 35.62,
+          "max": 37.1,
+          "stdev": 0.79,
+          "cv_percent": 2.2,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 5.78,
+          "median": 5.858,
+          "min": 5.605,
+          "max": 5.877,
+          "stdev": 0.152,
+          "cv_percent": 2.6,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 5.382,
+          "median": 5.383,
+          "min": 5.381,
+          "max": 5.383,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.491,
+          "median": 0.492,
+          "min": 0.49,
+          "max": 0.492,
+          "stdev": 0.001,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 4.891,
+          "median": 4.891,
+          "min": 4.891,
+          "max": 4.891,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 11.284,
+          "median": 11.213,
+          "min": 11.193,
+          "max": 11.447,
+          "stdev": 0.141,
+          "cv_percent": 1.3,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 6.79,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:38:22+01:00",
+          "load_time_s": 5.605,
+          "ttft_ms": 130.0,
+          "decode_tokens_per_s": 35.95,
+          "prefill_tokens_per_s": 248.23,
+          "end_to_end_tokens_per_s": 35.62,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 14.374,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.891,
+            "ollama_reported_vram_gib": 4.891,
+            "runner_rss_after_load_gib": 5.375,
+            "runner_peak_rss_gib": 5.383,
+            "runner_peak_phys_footprint_gib": 0.492,
+            "system_used_before_load_gib": 6.009,
+            "system_used_peak_gib": 11.447,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:46:02+01:00",
+          "load_time_s": 5.877,
+          "ttft_ms": 132.7,
+          "decode_tokens_per_s": 36.22,
+          "prefill_tokens_per_s": 247.41,
+          "end_to_end_tokens_per_s": 35.88,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 14.269,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.891,
+            "ollama_reported_vram_gib": 4.891,
+            "runner_rss_after_load_gib": 5.373,
+            "runner_peak_rss_gib": 5.381,
+            "runner_peak_phys_footprint_gib": 0.49,
+            "system_used_before_load_gib": 5.825,
+            "system_used_peak_gib": 11.193,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:53:46+01:00",
+          "load_time_s": 5.858,
+          "ttft_ms": 130.0,
+          "decode_tokens_per_s": 37.45,
+          "prefill_tokens_per_s": 248.6,
+          "end_to_end_tokens_per_s": 37.1,
+          "generated_tokens": 512,
+          "prompt_tokens": 31,
+          "total_wall_s": 13.801,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 4.891,
+            "ollama_reported_vram_gib": 4.891,
+            "runner_rss_after_load_gib": 5.374,
+            "runner_peak_rss_gib": 5.383,
+            "runner_peak_phys_footprint_gib": 0.492,
+            "system_used_before_load_gib": 5.709,
+            "system_used_peak_gib": 11.213,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "qwen3.5:9b-q4_K_M",
+      "vendor": "Alibaba (Qwen)",
+      "family": "qwen35",
+      "parameters": "9.0B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-02d45dc1cf45 --port 60690 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-f836f08f9211 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 6.1,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 34.22,
+          "median": 34.42,
+          "min": 33.69,
+          "max": 34.56,
+          "stdev": 0.47,
+          "cv_percent": 1.4,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 165.2,
+          "median": 162.3,
+          "min": 161.2,
+          "max": 172.0,
+          "stdev": 5.9,
+          "cv_percent": 3.6,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 210.21,
+          "median": 211.51,
+          "min": 206.67,
+          "max": 212.46,
+          "stdev": 3.11,
+          "cv_percent": 1.5,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 33.85,
+          "median": 34.03,
+          "min": 33.33,
+          "max": 34.18,
+          "stdev": 0.45,
+          "cv_percent": 1.3,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 6.043,
+          "median": 6.118,
+          "min": 5.872,
+          "max": 6.14,
+          "stdev": 0.149,
+          "cv_percent": 2.5,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 6.555,
+          "median": 6.555,
+          "min": 6.554,
+          "max": 6.556,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.393,
+          "median": 1.393,
+          "min": 1.392,
+          "max": 1.393,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 4.396,
+          "median": 4.396,
+          "min": 4.396,
+          "max": 4.396,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 12.365,
+          "median": 12.319,
+          "min": 12.204,
+          "max": 12.572,
+          "stdev": 0.188,
+          "cv_percent": 1.5,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 5.22,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:38:48+01:00",
+          "load_time_s": 5.872,
+          "ttft_ms": 172.0,
+          "decode_tokens_per_s": 34.42,
+          "prefill_tokens_per_s": 206.67,
+          "end_to_end_tokens_per_s": 34.03,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 15.045,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.396,
+            "ollama_reported_vram_gib": 4.396,
+            "runner_rss_after_load_gib": 6.4,
+            "runner_peak_rss_gib": 6.555,
+            "runner_peak_phys_footprint_gib": 1.393,
+            "system_used_before_load_gib": 6.092,
+            "system_used_peak_gib": 12.572,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:46:28+01:00",
+          "load_time_s": 6.14,
+          "ttft_ms": 161.2,
+          "decode_tokens_per_s": 33.69,
+          "prefill_tokens_per_s": 212.46,
+          "end_to_end_tokens_per_s": 33.33,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 15.36,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.396,
+            "ollama_reported_vram_gib": 4.396,
+            "runner_rss_after_load_gib": 6.399,
+            "runner_peak_rss_gib": 6.554,
+            "runner_peak_phys_footprint_gib": 1.393,
+            "system_used_before_load_gib": 5.821,
+            "system_used_peak_gib": 12.319,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:54:12+01:00",
+          "load_time_s": 6.118,
+          "ttft_ms": 162.3,
+          "decode_tokens_per_s": 34.56,
+          "prefill_tokens_per_s": 211.51,
+          "end_to_end_tokens_per_s": 34.18,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 14.979,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 4.396,
+            "ollama_reported_vram_gib": 4.396,
+            "runner_rss_after_load_gib": 6.401,
+            "runner_peak_rss_gib": 6.556,
+            "runner_peak_phys_footprint_gib": 1.392,
+            "system_used_before_load_gib": 5.715,
+            "system_used_peak_gib": 12.204,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "gemma4:12b-it-q4_K_M",
+      "vendor": "Google",
+      "family": "gemma4",
+      "parameters": "11.9B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-bb722270d543 --port 60732 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-0cb0cd0a5c49 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 7.47,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 26.03,
+          "median": 26.1,
+          "min": 25.88,
+          "max": 26.11,
+          "stdev": 0.13,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 357.2,
+          "median": 357.2,
+          "min": 357.2,
+          "max": 357.2,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 140.61,
+          "median": 140.59,
+          "min": 140.18,
+          "max": 141.05,
+          "stdev": 0.44,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 25.72,
+          "median": 25.79,
+          "min": 25.57,
+          "max": 25.79,
+          "stdev": 0.13,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 8.291,
+          "median": 8.446,
+          "min": 7.95,
+          "max": 8.476,
+          "stdev": 0.295,
+          "cv_percent": 3.6,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 7.705,
+          "median": 7.705,
+          "min": 7.704,
+          "max": 7.706,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.901,
+          "median": 0.901,
+          "min": 0.901,
+          "max": 0.901,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 0.439,
+          "median": 0.439,
+          "min": 0.439,
+          "max": 0.439,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 13.963,
+          "median": 13.939,
+          "min": 13.859,
+          "max": 14.091,
+          "stdev": 0.118,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 3.38,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:39:15+01:00",
+          "load_time_s": 7.95,
+          "ttft_ms": 357.2,
+          "decode_tokens_per_s": 25.88,
+          "prefill_tokens_per_s": 140.59,
+          "end_to_end_tokens_per_s": 25.57,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 20.024,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.439,
+            "ollama_reported_vram_gib": 0.439,
+            "runner_rss_after_load_gib": 7.691,
+            "runner_peak_rss_gib": 7.704,
+            "runner_peak_phys_footprint_gib": 0.901,
+            "system_used_before_load_gib": 6.056,
+            "system_used_peak_gib": 14.091,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:46:55+01:00",
+          "load_time_s": 8.476,
+          "ttft_ms": 357.2,
+          "decode_tokens_per_s": 26.1,
+          "prefill_tokens_per_s": 141.05,
+          "end_to_end_tokens_per_s": 25.79,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 19.853,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.439,
+            "ollama_reported_vram_gib": 0.439,
+            "runner_rss_after_load_gib": 7.692,
+            "runner_peak_rss_gib": 7.706,
+            "runner_peak_phys_footprint_gib": 0.901,
+            "system_used_before_load_gib": 5.944,
+            "system_used_peak_gib": 13.859,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:54:39+01:00",
+          "load_time_s": 8.446,
+          "ttft_ms": 357.2,
+          "decode_tokens_per_s": 26.11,
+          "prefill_tokens_per_s": 140.18,
+          "end_to_end_tokens_per_s": 25.79,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 19.851,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 0.439,
+            "ollama_reported_vram_gib": 0.439,
+            "runner_rss_after_load_gib": 7.691,
+            "runner_peak_rss_gib": 7.705,
+            "runner_peak_phys_footprint_gib": 0.901,
+            "system_used_before_load_gib": 5.748,
+            "system_used_peak_gib": 13.939,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "ministral-3:14b",
+      "vendor": "Mistral AI",
+      "family": "mistral3",
+      "parameters": "13.9B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-bfb40fc6bb9c --port 60782 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-bfb40fc6bb9c --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 8.46,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 25.89,
+          "median": 25.91,
+          "min": 25.83,
+          "max": 25.93,
+          "stdev": 0.05,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 175.2,
+          "median": 175.1,
+          "min": 175.1,
+          "max": 175.5,
+          "stdev": 0.2,
+          "cv_percent": 0.1,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 139.32,
+          "median": 139.41,
+          "min": 138.96,
+          "max": 139.6,
+          "stdev": 0.33,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 25.66,
+          "median": 25.68,
+          "min": 25.6,
+          "max": 25.7,
+          "stdev": 0.05,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 9.244,
+          "median": 9.405,
+          "min": 8.645,
+          "max": 9.681,
+          "stdev": 0.537,
+          "cv_percent": 5.8,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 9.004,
+          "median": 9.004,
+          "min": 9.003,
+          "max": 9.004,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.363,
+          "median": 1.363,
+          "min": 1.362,
+          "max": 1.363,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 1.046,
+          "median": 1.046,
+          "min": 1.046,
+          "max": 1.046,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 14.865,
+          "median": 14.875,
+          "min": 14.746,
+          "max": 14.975,
+          "stdev": 0.115,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 2.88,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:39:49+01:00",
+          "load_time_s": 8.645,
+          "ttft_ms": 175.5,
+          "decode_tokens_per_s": 25.83,
+          "prefill_tokens_per_s": 138.96,
+          "end_to_end_tokens_per_s": 25.6,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 19.997,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.046,
+            "ollama_reported_vram_gib": 1.046,
+            "runner_rss_after_load_gib": 8.999,
+            "runner_peak_rss_gib": 9.004,
+            "runner_peak_phys_footprint_gib": 1.363,
+            "system_used_before_load_gib": 6.054,
+            "system_used_peak_gib": 14.975,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:47:30+01:00",
+          "load_time_s": 9.681,
+          "ttft_ms": 175.1,
+          "decode_tokens_per_s": 25.91,
+          "prefill_tokens_per_s": 139.41,
+          "end_to_end_tokens_per_s": 25.68,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 19.934,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.046,
+            "ollama_reported_vram_gib": 1.046,
+            "runner_rss_after_load_gib": 8.998,
+            "runner_peak_rss_gib": 9.004,
+            "runner_peak_phys_footprint_gib": 1.363,
+            "system_used_before_load_gib": 5.828,
+            "system_used_peak_gib": 14.875,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:55:13+01:00",
+          "load_time_s": 9.405,
+          "ttft_ms": 175.1,
+          "decode_tokens_per_s": 25.93,
+          "prefill_tokens_per_s": 139.6,
+          "end_to_end_tokens_per_s": 25.7,
+          "generated_tokens": 512,
+          "prompt_tokens": 24,
+          "total_wall_s": 19.918,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.046,
+            "ollama_reported_vram_gib": 1.046,
+            "runner_rss_after_load_gib": 8.999,
+            "runner_peak_rss_gib": 9.003,
+            "runner_peak_phys_footprint_gib": 1.362,
+            "system_used_before_load_gib": 5.815,
+            "system_used_peak_gib": 14.746,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "qwen3:14b",
+      "vendor": "Alibaba (Qwen)",
+      "family": "qwen3",
+      "parameters": "14.8B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-a8cc1361f314 --port 60835 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 8.64,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 24.18,
+          "median": 24.27,
+          "min": 23.97,
+          "max": 24.29,
+          "stdev": 0.18,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 434.1,
+          "median": 434.2,
+          "min": 433.2,
+          "max": 434.9,
+          "stdev": 0.9,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 95.72,
+          "median": 95.84,
+          "min": 95.37,
+          "max": 95.94,
+          "stdev": 0.3,
+          "cv_percent": 0.3,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 23.79,
+          "median": 23.88,
+          "min": 23.58,
+          "max": 23.9,
+          "stdev": 0.18,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 7.388,
+          "median": 7.631,
+          "min": 6.876,
+          "max": 7.658,
+          "stdev": 0.444,
+          "cv_percent": 6.0,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 8.977,
+          "median": 8.979,
+          "min": 8.973,
+          "max": 8.98,
+          "stdev": 0.004,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.488,
+          "median": 0.488,
+          "min": 0.488,
+          "max": 0.488,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 8.109,
+          "median": 8.109,
+          "min": 8.109,
+          "max": 8.109,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 14.81,
+          "median": 14.752,
+          "min": 14.731,
+          "max": 14.948,
+          "stdev": 0.12,
+          "cv_percent": 0.8,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 2.69,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:40:24+01:00",
+          "load_time_s": 6.876,
+          "ttft_ms": 434.2,
+          "decode_tokens_per_s": 23.97,
+          "prefill_tokens_per_s": 95.37,
+          "end_to_end_tokens_per_s": 23.58,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 21.709,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 8.109,
+            "ollama_reported_vram_gib": 8.109,
+            "runner_rss_after_load_gib": 8.971,
+            "runner_peak_rss_gib": 8.979,
+            "runner_peak_phys_footprint_gib": 0.488,
+            "system_used_before_load_gib": 6.049,
+            "system_used_peak_gib": 14.948,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:48:05+01:00",
+          "load_time_s": 7.658,
+          "ttft_ms": 433.2,
+          "decode_tokens_per_s": 24.27,
+          "prefill_tokens_per_s": 95.94,
+          "end_to_end_tokens_per_s": 23.88,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 21.44,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 8.109,
+            "ollama_reported_vram_gib": 8.109,
+            "runner_rss_after_load_gib": 8.971,
+            "runner_peak_rss_gib": 8.98,
+            "runner_peak_phys_footprint_gib": 0.488,
+            "system_used_before_load_gib": 5.836,
+            "system_used_peak_gib": 14.731,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:55:49+01:00",
+          "load_time_s": 7.631,
+          "ttft_ms": 434.9,
+          "decode_tokens_per_s": 24.29,
+          "prefill_tokens_per_s": 95.84,
+          "end_to_end_tokens_per_s": 23.9,
+          "generated_tokens": 512,
+          "prompt_tokens": 33,
+          "total_wall_s": 21.427,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 8.109,
+            "ollama_reported_vram_gib": 8.109,
+            "runner_rss_after_load_gib": 8.965,
+            "runner_peak_rss_gib": 8.973,
+            "runner_peak_phys_footprint_gib": 0.488,
+            "system_used_before_load_gib": 5.749,
+            "system_used_peak_gib": 14.752,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "gpt-oss:20b",
+      "vendor": "OpenAI",
+      "family": "gpt-oss",
+      "parameters": "20.9B",
+      "quantization": "MXFP4",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": false,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-8ecb5d4ad617 --port 60882 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 12.85,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 52.47,
+          "median": 52.66,
+          "min": 52.09,
+          "max": 52.66,
+          "stdev": 0.33,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 296.4,
+          "median": 296.5,
+          "min": 295.8,
+          "max": 297.0,
+          "stdev": 0.6,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 393.96,
+          "median": 393.4,
+          "min": 393.39,
+          "max": 395.1,
+          "stdev": 0.98,
+          "cv_percent": 0.2,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 51.22,
+          "median": 51.39,
+          "min": 50.86,
+          "max": 51.4,
+          "stdev": 0.31,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 12.122,
+          "median": 12.441,
+          "min": 11.434,
+          "max": 12.49,
+          "stdev": 0.596,
+          "cv_percent": 4.9,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 12.892,
+          "median": 12.892,
+          "min": 12.888,
+          "max": 12.895,
+          "stdev": 0.004,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 0.259,
+          "median": 0.259,
+          "min": 0.258,
+          "max": 0.26,
+          "stdev": 0.001,
+          "cv_percent": 0.4,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 11.857,
+          "median": 11.857,
+          "min": 11.857,
+          "max": 11.857,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 18.087,
+          "median": 18.103,
+          "min": 17.977,
+          "max": 18.18,
+          "stdev": 0.102,
+          "cv_percent": 0.6,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 4.07,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:40:58+01:00",
+          "load_time_s": 11.434,
+          "ttft_ms": 295.8,
+          "decode_tokens_per_s": 52.09,
+          "prefill_tokens_per_s": 393.39,
+          "end_to_end_tokens_per_s": 50.86,
+          "generated_tokens": 512,
+          "prompt_tokens": 92,
+          "total_wall_s": 10.066,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 11.857,
+            "ollama_reported_vram_gib": 11.857,
+            "runner_rss_after_load_gib": 12.885,
+            "runner_peak_rss_gib": 12.895,
+            "runner_peak_phys_footprint_gib": 0.259,
+            "system_used_before_load_gib": 6.04,
+            "system_used_peak_gib": 18.18,
+            "swap_used_after_test_gib": 0.39
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:48:41+01:00",
+          "load_time_s": 12.49,
+          "ttft_ms": 296.5,
+          "decode_tokens_per_s": 52.66,
+          "prefill_tokens_per_s": 393.4,
+          "end_to_end_tokens_per_s": 51.39,
+          "generated_tokens": 512,
+          "prompt_tokens": 92,
+          "total_wall_s": 9.963,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 11.857,
+            "ollama_reported_vram_gib": 11.857,
+            "runner_rss_after_load_gib": 12.882,
+            "runner_peak_rss_gib": 12.892,
+            "runner_peak_phys_footprint_gib": 0.258,
+            "system_used_before_load_gib": 5.833,
+            "system_used_peak_gib": 18.103,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:56:24+01:00",
+          "load_time_s": 12.441,
+          "ttft_ms": 297.0,
+          "decode_tokens_per_s": 52.66,
+          "prefill_tokens_per_s": 395.1,
+          "end_to_end_tokens_per_s": 51.4,
+          "generated_tokens": 512,
+          "prompt_tokens": 92,
+          "total_wall_s": 9.96,
+          "done_reason": "length",
+          "thinking_output": true,
+          "memory": {
+            "ollama_reported_gib": 11.857,
+            "ollama_reported_vram_gib": 11.857,
+            "runner_rss_after_load_gib": 12.878,
+            "runner_peak_rss_gib": 12.888,
+            "runner_peak_phys_footprint_gib": 0.26,
+            "system_used_before_load_gib": 5.754,
+            "system_used_peak_gib": 17.977,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    },
+    {
+      "model": "mistral-small3.2:24b",
+      "vendor": "Mistral AI",
+      "family": "mistral3",
+      "parameters": "24.0B",
+      "quantization": "Q4_K_M",
+      "format": "gguf",
+      "ollama_runner": "llamacpp",
+      "context_length": 4096,
+      "speculative_decoding_active": false,
+      "vision_projector_loaded": true,
+      "engine_command": "/opt/homebrew/Cellar/ollama/0.40.16/libexec/lib/ollama/llama-server --model sha256-41a5b0c36a28 --port 60946 --host 127.0.0.1 --no-webui --offline -c 4096 -np 1 --log-verbosity 4 --no-log-prefix --no-log-timestamps --no-jinja --chat-template chatml --mmproj sha256-41a5b0c36a28 --cache-type-k q8_0 --cache-type-v q8_0 --flash-attn on -b 512 -ub 512 --context-shift --keep 4",
+      "disk_size_gib": 14.14,
+      "successful_runs": 3,
+      "stats": {
+        "decode_tokens_per_s": {
+          "mean": 16.08,
+          "median": 16.16,
+          "min": 15.92,
+          "max": 16.16,
+          "stdev": 0.14,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "ttft_ms": {
+          "mean": 305.7,
+          "median": 306.2,
+          "min": 304.1,
+          "max": 306.8,
+          "stdev": 1.4,
+          "cv_percent": 0.5,
+          "n": 3
+        },
+        "prefill_tokens_per_s": {
+          "mean": 75.93,
+          "median": 76.02,
+          "min": 75.58,
+          "max": 76.18,
+          "stdev": 0.31,
+          "cv_percent": 0.4,
+          "n": 3
+        },
+        "end_to_end_tokens_per_s": {
+          "mean": 15.93,
+          "median": 16.01,
+          "min": 15.77,
+          "max": 16.01,
+          "stdev": 0.14,
+          "cv_percent": 0.9,
+          "n": 3
+        },
+        "load_time_s": {
+          "mean": 19.207,
+          "median": 19.541,
+          "min": 18.503,
+          "max": 19.578,
+          "stdev": 0.61,
+          "cv_percent": 3.2,
+          "n": 3
+        },
+        "runner_peak_rss_gib": {
+          "mean": 14.612,
+          "median": 14.615,
+          "min": 14.605,
+          "max": 14.616,
+          "stdev": 0.006,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "runner_peak_phys_footprint_gib": {
+          "mean": 1.367,
+          "median": 1.367,
+          "min": 1.367,
+          "max": 1.368,
+          "stdev": 0.001,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "ollama_reported_gib": {
+          "mean": 1.139,
+          "median": 1.139,
+          "min": 1.139,
+          "max": 1.139,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        },
+        "system_used_peak_gib": {
+          "mean": 20.38,
+          "median": 20.441,
+          "min": 20.207,
+          "max": 20.491,
+          "stdev": 0.152,
+          "cv_percent": 0.7,
+          "n": 3
+        },
+        "generated_tokens": {
+          "mean": 512,
+          "median": 512,
+          "min": 512,
+          "max": 512,
+          "stdev": 0.0,
+          "cv_percent": 0.0,
+          "n": 3
+        }
+      },
+      "decode_tokens_per_s_per_gib": 1.1,
+      "runs": [
+        {
+          "round": 1,
+          "ok": true,
+          "started_at": "2026-11-13T00:41:26+01:00",
+          "load_time_s": 18.503,
+          "ttft_ms": 306.8,
+          "decode_tokens_per_s": 15.92,
+          "prefill_tokens_per_s": 75.58,
+          "end_to_end_tokens_per_s": 15.77,
+          "generated_tokens": 512,
+          "prompt_tokens": 23,
+          "total_wall_s": 32.471,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.139,
+            "ollama_reported_vram_gib": 1.139,
+            "runner_rss_after_load_gib": 14.61,
+            "runner_peak_rss_gib": 14.616,
+            "runner_peak_phys_footprint_gib": 1.368,
+            "system_used_before_load_gib": 6.032,
+            "system_used_peak_gib": 20.441,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 2,
+          "ok": true,
+          "started_at": "2026-11-13T00:49:09+01:00",
+          "load_time_s": 19.578,
+          "ttft_ms": 306.2,
+          "decode_tokens_per_s": 16.16,
+          "prefill_tokens_per_s": 76.02,
+          "end_to_end_tokens_per_s": 16.01,
+          "generated_tokens": 512,
+          "prompt_tokens": 23,
+          "total_wall_s": 31.989,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.139,
+            "ollama_reported_vram_gib": 1.139,
+            "runner_rss_after_load_gib": 14.61,
+            "runner_peak_rss_gib": 14.615,
+            "runner_peak_phys_footprint_gib": 1.367,
+            "system_used_before_load_gib": 5.828,
+            "system_used_peak_gib": 20.491,
+            "swap_used_after_test_gib": 0.382
+          }
+        },
+        {
+          "round": 3,
+          "ok": true,
+          "started_at": "2026-11-13T00:56:52+01:00",
+          "load_time_s": 19.541,
+          "ttft_ms": 304.1,
+          "decode_tokens_per_s": 16.16,
+          "prefill_tokens_per_s": 76.18,
+          "end_to_end_tokens_per_s": 16.01,
+          "generated_tokens": 512,
+          "prompt_tokens": 23,
+          "total_wall_s": 31.986,
+          "done_reason": "length",
+          "thinking_output": false,
+          "memory": {
+            "ollama_reported_gib": 1.139,
+            "ollama_reported_vram_gib": 1.139,
+            "runner_rss_after_load_gib": 14.6,
+            "runner_peak_rss_gib": 14.605,
+            "runner_peak_phys_footprint_gib": 1.367,
+            "system_used_before_load_gib": 5.748,
+            "system_used_peak_gib": 20.207,
+            "swap_used_after_test_gib": 0.382
+          }
+        }
+      ]
+    }
+  ]
+}
